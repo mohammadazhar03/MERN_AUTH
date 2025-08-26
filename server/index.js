@@ -8,13 +8,27 @@ const userRouter = require('./routes/userRouter.js');
 
 mongoDB();
 require('dotenv').config()
-const allowedOrigins=[{
-    local:'http://localhost:5173',
-    deployed:'https://mern-authapi.netlify.app/'}]
+const allowedOrigins = [
+    'http://localhost:5173',  // local dev
+    'https://yourfrontend.netlify.app' // deployed frontend
+];
+
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({origin : allowedOrigins, credentials: true}));
+
+app.use(cors({
+    origin: function(origin, callback){
+        // allow requests with no origin like mobile apps or Postman
+        if(!origin) return callback(null, true);
+        if(allowedOrigins.indexOf(origin) === -1){
+            const msg = `The CORS policy for this site does not allow access from the specified Origin.`;
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true,
+}));
 
 app.get('/',(req,res)=> res.send('API is Running'))
 app.use('/api/auth',authRouter)

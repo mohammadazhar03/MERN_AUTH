@@ -4,7 +4,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const transport = require('../config/nodemailer.js');
-const mailOption = require('./mailOption.js');
+// const mailOption = require('./mailOption.js');
 const { EMAIL_VERIFY_TEMPLATE,PASSWORD_RESET_TEMPLATE } = require('../config/emailTemplates.js') ;
 
 const register = async ( req,res)=>{
@@ -36,15 +36,15 @@ const register = async ( req,res)=>{
         })
 
         // welcome Email form brevo.com
-        // const mailOption={
-        //         from:process.env.SENDER_EMAIL,
-        //         to:email,
-        //         subject: "Welcome to Course4you",
-        //         text:`welcome to course4You website ${email}`
-        //     }
+        const mailOption={
+                from:process.env.SENDER_EMAIL,
+                to:email,
+                subject: "Welcome to Course4you",
+                text:`welcome to course4You website ${email}`
+            }
 
-        //     await transport.sendMail(mailOption);
-        mailOption(email);
+            await transport.sendMail(mailOption);
+        // mailOption(email);
         return res.json({success:true, message:'User Registered Successfully'})
 
     } catch(error){
@@ -69,10 +69,12 @@ const logIn = async (req,res)=>{
         }
 
     const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"7d"});
+    
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token',token,{
         httpOnly:true,
-        secure:process.env.NODE_ENV==='production',
-        sameSite:process.env.NODE_ENV==='production' ? 'none' : 'lax',
+        secure:isProduction,
+        sameSite:isProduction ? 'none' : 'lax',
         maxAge:7 * 24 * 60*60*1000,
     })
     return res.json({success:true , message:'User LoggedIn Successfully'})
