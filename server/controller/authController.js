@@ -28,10 +28,11 @@ const register = async ( req,res)=>{
 
         // creating Token and send as cookie 
         const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"7d"})
+        const isProduction = process.env.NODE_ENV === 'production';
         res.cookie('token',token,{
             httpOnly:true,
-            secure:process.env.NODE_ENV === 'production',
-            sameSite:process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure:isProduction,
+            sameSite:isProduction ? 'none' : 'lax',
             maxAge:7*24*60*60*1000
         })
 
@@ -69,7 +70,7 @@ const logIn = async (req,res)=>{
         }
 
     const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"7d"});
-    
+
     const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token',token,{
         httpOnly:true,
@@ -78,9 +79,9 @@ const logIn = async (req,res)=>{
         maxAge:7 * 24 * 60*60*1000,
     })
     return res.json({success:true , message:'User LoggedIn Successfully'})
-    }catch(error){
-        res.json({success:false,message:error.message})
-    }
+}catch(error){
+    res.json({success:false,message:error.message})
+}
 }
 
 const logOut = async (req, res) => {
@@ -88,7 +89,7 @@ const logOut = async (req, res) => {
     res.clearCookie('token', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
 
     return res.json({ success: true, message: 'Logged Out' });
