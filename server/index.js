@@ -10,7 +10,7 @@ mongoDB();
 require('dotenv').config()
 const allowedOrigins = [
     'http://localhost:5173',  // local dev
-    'https://yourfrontend.netlify.app' // deployed frontend
+    'https://mern-authapi.netlify.app/' // deployed frontend
 ];
 
 
