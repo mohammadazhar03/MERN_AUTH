@@ -8,7 +8,9 @@ const userRouter = require('./routes/userRouter.js');
 
 mongoDB();
 require('dotenv').config()
-const allowedOrigins=['http://localhost:5173']
+const allowedOrigins=[{
+    local:'http://localhost:5173',
+    deployed:'https://mern-authapi.netlify.app/'}]
 
 app.use(express.json());
 app.use(cookieParser());
