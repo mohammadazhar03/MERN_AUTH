@@ -8,7 +8,7 @@ function Login() {
     const [state,setState]=useState('SignUp')
     const navigate = useNavigate();
 
-    const {apiUrl,setIsLoggedIn,getUserData , isLoggedIn} = useContext(AppContent)
+    const {backendUrl,setIsLoggedIn,getUserData , isLoggedIn } = useContext(AppContent)
 
     const[name,setName]=useState('');
     const[email,setEmail]=useState('');
@@ -19,23 +19,23 @@ function Login() {
           e.preventDefault();
         axios.defaults.withCredentials= true;
         if(state==='SignUp'){
-           const {data} =  await axios.post(`${apiUrl}/api/auth/register`,{name,email,password})
+           const {data} =  await axios.post(`${backendUrl}/api/auth/register`,{name,email,password})
            
                 if(data.success){
                     toast.success(data.message)
                     setIsLoggedIn(true)
-                    getUserData();
+                   await getUserData();
                     navigate('/')
                 }else{
                     toast.error(data.message)
                 }
         }else{
-            const {data}= await axios.post(`${apiUrl}/api/auth/login`,{email,password})
+            const {data}= await axios.post(`${backendUrl}/api/auth/login`,{email,password})
             console.log(data)
                 if(data.success){
                     toast.success(data.message)
                     setIsLoggedIn(true)
-                    getUserData();
+                    await getUserData();
                     navigate('/')
                 }else{
                     toast.error(data.message);
@@ -51,6 +51,7 @@ if(isLoggedIn){
     getUserData();
 }
 },[isLoggedIn])
+
 
   return (
     <div className='flex items-center justify-center min-h-screen px-6 sm:px-0 bg-gradient-to-br from-blue-200 to-purple-200'>

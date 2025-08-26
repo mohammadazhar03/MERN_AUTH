@@ -3,8 +3,9 @@ import { assets } from '../assets/assets'
 import { useContext } from 'react';
 import { AppContent } from '../context/AppContext';
 const Header = () => {
+
   const {userData} =useContext(AppContent)
-  
+  console.log(userData);
   return (
     <div className='flex flex-col items-center mt-20 px-4 text-gray-800'>
       <img src={assets.header_img} alt="" className='w-40 h-40 rounded-full mb-6' />

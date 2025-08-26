@@ -5,7 +5,6 @@ const userController= async (req,res)=>{
     try{
         // const {userId}= req.body;
         const user = await userModel.findById(req.userId);
-
         if(!user){
             return res.json({success:false , message:'User details not found'})
         }

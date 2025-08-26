@@ -9,12 +9,12 @@ import axios from 'axios';
 const Navbar=()=> {
 
   const navigate= useNavigate();
-  const {userData,setIsLoggedIn,apiUrl,setUserData}= useContext(AppContent);
+  const {userData,setIsLoggedIn,backendUrl,setUserData}= useContext(AppContent);
 
   const handleLogout= async()=>{
     axios.defaults.withCredentials=true;
     try{
-      const {data} = await axios.post(`${apiUrl}/api/auth/logout`);
+      const {data} = await axios.post(`${backendUrl}/api/auth/logout`);
       
         data.success && setIsLoggedIn(false);
         data.success && setUserData(false);
@@ -28,7 +28,7 @@ const Navbar=()=> {
 
    const sendVerificationEmail = async()=>{
     try{
-      const {data} = await axios.post(`${apiUrl}/api/auth/send-verify-otp`,{},{withCredentials:true});
+      const {data} = await axios.post(`${backendUrl}/api/auth/send-verify-otp`,{},{withCredentials:true});
       if(data.success){
         navigate('/verify-email')
         toast.success(data.message)

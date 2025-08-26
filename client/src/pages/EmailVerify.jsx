@@ -14,7 +14,7 @@ const  EmailVerify = () => {
 const navigate = useNavigate();
 
 const inputRef = React.useRef([])
-const {apiUrl,userData,isLoggedIn,getUserData} = useContext(AppContent);
+const {backendUrl,userData,isLoggedIn,getUserData} = useContext(AppContent);
 
 const inputHandler=(e,index)=>{
   const value= e.target.value;
@@ -44,7 +44,7 @@ const onSubmitHandler= async (e)=>{
   try{
     const otpArray = inputRef.current.map(e => e.value);
     const otp = otpArray.join('');
-    const {data} = await axios.post(`${apiUrl}/api/auth/verify-account`,{otp},{withCredentials:true});
+    const {data} = await axios.post(`${backendUrl}/api/auth/verify-account`,{otp},{withCredentials:true});
 
     if(data.success){
       toast.success(data.message);

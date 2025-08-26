@@ -2,62 +2,51 @@ import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+
 export const AppContent = createContext();
 
 export const AppContextProvider = (props)=>{
 
-    const backendUrl= import.meta.env.VITE_BACKEND_URL;
-    const apiUrl= import.meta.env.VITE_API_URL;
-
-    const [isLoggedIn , setIsLoggedIn]=useState(false);
-    const [userData,setUserData]=useState(null);
-
-   const getUserData = async()=>{
-    try{
-        const {data} = await axios.get(`${apiUrl}/api/user/data`,{withCredentials:true});
-        if(data.success) {
-
-            setUserData(data.userData)
-        }else{
-            if(data.message !== 'Token is missing'){
-            toast.error(data.message)
+    const backendUrl= import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+    const [isLoggedIn,setIsLoggedIn]= useState(false);
+    const [userData,setUserData]= useState('');
+    // const [loading,setLoading]= useState(true);
+    
+    const getUserData=async ()=>{
+        const {data}= await axios.get(`${backendUrl}/api/user/data`,{withCredentials:true});
+        try{
+            if(data.success){
+            setUserData(data.userData);
+            setIsLoggedIn(true);
         }
-        setUserData(null)
-    }     
-}catch(error){
-    if (error.response?.status !== 401) {
-        toast.error(error.message);
-    }}
-    setUserData(null)
-}
+        }catch(error){
+            toast.error(error.message)
+        }   
+    }
+
 
     const getAuthenticationStatus= async()=>{
         try{
-            const {data} = await axios.get(`${apiUrl}/api/auth/is-auth`,{withCredentials:true});
+            const {data}= await axios.get(`${backendUrl}/api/auth/is-auth`,{withCredentials:true});
             if(data.success){
-                setIsLoggedIn(true)
-                getUserData();
+                setIsLoggedIn(true);
+                await getUserData();
             }else{
-                setIsLoggedIn(false)
-                setUserData(null)
+                setIsLoggedIn(false);
+                setUserData('');
             }
-            
         }catch(error){
-             // treat 401/unauthorized as normal "not logged in"
-            if (error.response?.status !== 401) {
-            toast.error(error.message);
-                }
             setIsLoggedIn(false);
-            setUserData(null);
-  }}
-
-
-    useEffect(()=>{
-        getAuthenticationStatus();
-    },[])
+            setUserData('');
+            toast.error(error.message)
+        }
+    }
+useEffect(()=>{
+    getAuthenticationStatus();  
+},[])
 
    const value={
-        apiUrl,
+        backendUrl,
         isLoggedIn,setIsLoggedIn,
         userData,setUserData, getUserData,getAuthenticationStatus
     }
