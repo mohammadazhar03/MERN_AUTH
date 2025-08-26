@@ -16,7 +16,7 @@ const [otp,setOtp] = useState(0);
 const [isOtpVerified,setIsOtpVerified]=useState(false);
 
 
- const {backendUrl,getUserData}= useContext(AppContent);
+ const {apiUrl,getUserData}= useContext(AppContent);
 
  
  const inputRef = React.useRef([])
@@ -50,7 +50,7 @@ const onPasteHandler=(e)=>{
 const onSubmitEmail=async(e)=>{
   e.preventDefault();
   try{
-    const {data}= await axios.post(`${backendUrl}/api/auth/send-reset-opt`,{email},{withCredentials:true});
+    const {data}= await axios.post(`${apiUrl}/api/auth/send-reset-opt`,{email},{withCredentials:true});
     if(data.success){
       toast.success(data.message);
       setIsEmailSent(true);
@@ -72,7 +72,7 @@ const onSubmitOtp= async(e)=>{
 const onSubmitNewPasswordr= async(e)=>{
   e.preventDefault(); 
       try{
-        const {data}= await axios.post(`${backendUrl}/api/auth/reset-password`,{newPassword,otp,email},{withCredentials:true});
+        const {data}= await axios.post(`${apiUrl}/api/auth/reset-password`,{newPassword,otp,email},{withCredentials:true});
         if(data.success){
           toast.success(data.message);
           navigate('/login');

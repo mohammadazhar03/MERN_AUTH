@@ -8,7 +8,7 @@ function Login() {
     const [state,setState]=useState('SignUp')
     const navigate = useNavigate();
 
-    const {backendUrl,setIsLoggedIn,getUserData , isLoggedIn} = useContext(AppContent)
+    const {apiUrl,setIsLoggedIn,getUserData , isLoggedIn} = useContext(AppContent)
 
     const[name,setName]=useState('');
     const[email,setEmail]=useState('');
@@ -19,7 +19,7 @@ function Login() {
           e.preventDefault();
         axios.defaults.withCredentials= true;
         if(state==='SignUp'){
-           const {data} =  await axios.post(`${backendUrl}/api/auth/register`,{name,email,password})
+           const {data} =  await axios.post(`${apiUrl}/api/auth/register`,{name,email,password})
            
                 if(data.success){
                     toast.success(data.message)
@@ -30,7 +30,7 @@ function Login() {
                     toast.error(data.message)
                 }
         }else{
-            const {data}= await axios.post(`${backendUrl}/api/auth/login`,{email,password})
+            const {data}= await axios.post(`${apiUrl}/api/auth/login`,{email,password})
             console.log(data)
                 if(data.success){
                     toast.success(data.message)
