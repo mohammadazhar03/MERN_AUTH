@@ -28,11 +28,11 @@ const register = async ( req,res)=>{
 
         // creating Token and send as cookie 
         const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"7d"})
-        const isProduction = process.env.NODE_ENV === 'production';
+
         res.cookie('token',token,{
             httpOnly:true,
-            secure:isProduction,
-            sameSite:isProduction ? 'none' : 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge:7*24*60*60*1000
         })
 
@@ -71,11 +71,10 @@ const logIn = async (req,res)=>{
 
     const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"7d"});
 
-    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token',token,{
         httpOnly:true,
-        secure:isProduction,
-        sameSite:isProduction ? 'none' : 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge:7 * 24 * 60*60*1000,
     })
     return res.json({success:true , message:'User LoggedIn Successfully'})
